@@ -1,8 +1,12 @@
 [package]
 name = "bass-sys"
-version = "0.1.0"
+version = "1.0.0"
 authors = ["KernelError <villainkernelerror@gmail.com>"]
 edition = "2018"
+repository = "https://github.com/KernelErr0r/bass-sys"
+license = "MIT"
+keywords = ["bass", "bindings", "audio"]
+categories = ["external-ffi-bindings", "multimedia::audio"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
