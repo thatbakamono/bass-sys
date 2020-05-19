@@ -1,5 +1,6 @@
 [package]
 name = "bass-sys"
+description = "Bass bindings for Rust"
 version = "1.0.0"
 authors = ["KernelError <villainkernelerror@gmail.com>"]
 edition = "2018"
