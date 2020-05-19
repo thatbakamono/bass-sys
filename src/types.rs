@@ -200,7 +200,6 @@ impl BassSample {
 }
 
 #[repr(C)]
-#[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct BassChannelInfo {
     default_frequency: DWORD,
@@ -238,7 +237,6 @@ impl BassChannelInfo {
 }
 
 #[repr(C)]
-#[allow(dead_code)]
 pub struct BassPluginForm {
     name: BassString,
     file_extension_filter: BassString,
@@ -254,7 +252,6 @@ impl BassPluginForm {
 }
 
 #[repr(C)]
-#[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct BassPluginInfo {
     version: DWORD,
@@ -273,7 +270,6 @@ impl BassPluginInfo {
 }
 
 #[repr(C)]
-#[allow(dead_code)]
 #[derive(Default, Debug, Clone)]
 pub struct Bass3DVector {
     x: f32,
@@ -288,7 +284,6 @@ impl Bass3DVector {
 }
 
 #[repr(C)]
-#[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct BassFileProcs {
     close_handle: *mut FILECLOSEPROC,
@@ -314,7 +309,6 @@ impl BassFileProcs {
 }
 
 #[repr(C)]
-#[allow(dead_code)]
 #[derive(Default, Debug, Clone)]
 pub struct TagId3 {
     id: [c_char; 3],
@@ -349,7 +343,6 @@ impl TagId3 {
 }
 
 #[repr(C)]
-#[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct TagApeBinary {
     key: *mut c_char,
@@ -364,7 +357,7 @@ impl TagApeBinary {
 }
 
 #[repr(C)]
-#[allow(dead_code)]
+
 pub struct TagBext {
     description: [c_char; 256],
     originator: [c_char; 32],
@@ -407,7 +400,6 @@ impl TagBext {
 }
 
 #[repr(C)]
-#[allow(dead_code)]
 #[derive(Default, Debug, Clone)]
 pub struct TagCartTimer {
     timer_usage_id: DWORD,
@@ -424,7 +416,7 @@ impl TagCartTimer {
 }
 
 #[repr(C)]
-#[allow(dead_code)]
+
 pub struct TagCart {
     version: [c_char; 4],
     title: [c_char; 64],
@@ -497,7 +489,6 @@ impl TagCart {
 }
 
 #[repr(C)]
-#[allow(dead_code)]
 #[derive(Default, Debug, Clone)]
 pub struct TagCuePoint {
     name: DWORD,
@@ -529,7 +520,6 @@ impl TagCuePoint {
 }
 
 #[repr(C)]
-#[allow(dead_code)]
 #[derive(Default, Debug, Clone)]
 pub struct TagCue {
     cue_points_count: DWORD,
@@ -546,7 +536,6 @@ impl TagCue {
 }
 
 #[repr(C)]
-#[allow(dead_code)]
 #[derive(Default, Debug, Clone)]
 pub struct TagSampleLoop {
     identifier: DWORD,
@@ -578,7 +567,6 @@ impl TagSampleLoop {
 }
 
 #[repr(C)]
-#[allow(dead_code)]
 #[derive(Default, Debug, Clone)]
 pub struct TagSample {
     manufacturer: DWORD,
@@ -622,7 +610,6 @@ impl TagSample {
 }
 
 #[repr(C)]
-#[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct TagCaCodec {
     file_type: DWORD,
@@ -641,7 +628,6 @@ impl TagCaCodec {
 }
 
 #[repr(C)]
-#[allow(dead_code)]
 #[derive(Default, Debug, Clone)]
 pub struct WaveFormatEx {
     format_tag: WORD,
@@ -676,7 +662,6 @@ impl WaveFormatEx {
 }
 
 #[repr(C)]
-#[allow(dead_code)]
 #[derive(Default, Debug, Clone)]
 pub struct BassDx8Chorus {
     wet_dry_mix: f32,
@@ -713,7 +698,6 @@ impl BassDx8Chorus {
 }
 
 #[repr(C)]
-#[allow(dead_code)]
 #[derive(Default, Debug, Clone)]
 pub struct BassDx8Compressor {
     gain: f32,
@@ -745,7 +729,6 @@ impl BassDx8Compressor {
 }
 
 #[repr(C)]
-#[allow(dead_code)]
 #[derive(Default, Debug, Clone)]
 pub struct BassDx8Distortion {
     gain: f32,
@@ -774,7 +757,6 @@ impl BassDx8Distortion {
 }
 
 #[repr(C)]
-#[allow(dead_code)]
 #[derive(Default, Debug, Clone)]
 pub struct BassDx8Echo {
     wet_dry_mix: f32,
@@ -803,7 +785,6 @@ impl BassDx8Echo {
 }
 
 #[repr(C)]
-#[allow(dead_code)]
 #[derive(Default, Debug, Clone)]
 pub struct BassDx8Flanger {
     wet_dry_mix: f32,
@@ -840,7 +821,6 @@ impl BassDx8Flanger {
 }
 
 #[repr(C)]
-#[allow(dead_code)]
 #[derive(Default, Debug, Clone)]
 pub struct BassDx8Gargle {
     rate_hz: DWORD,
@@ -859,7 +839,6 @@ impl BassDx8Gargle {
 }
 
 #[repr(C)]
-#[allow(dead_code)]
 #[derive(Default, Debug, Clone)]
 pub struct BassDx8I3Dl2Reverb {
     room: i32,
@@ -922,7 +901,6 @@ impl BassDx8I3Dl2Reverb {
 }
 
 #[repr(C)]
-#[allow(dead_code)]
 #[derive(Default, Debug, Clone)]
 pub struct BassDx8ParamEq {
     center: f32,
@@ -941,7 +919,6 @@ impl BassDx8ParamEq {
 }
 
 #[repr(C)]
-#[allow(dead_code)]
 #[derive(Default, Debug, Clone)]
 pub struct BassDx8Reverb {
     gain: f32,
@@ -967,7 +944,6 @@ impl BassDx8Reverb {
 }
 
 #[repr(C)]
-#[allow(dead_code)]
 #[derive(Default, Debug, Clone)]
 pub struct BassFxVolumeParam {
     target: f32,
