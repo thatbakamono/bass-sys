@@ -1,6 +1,9 @@
+use std::borrow::Cow;
 use std::os::raw::{c_char, c_void};
 #[cfg(any(target_family = "windows"))]
-use widestring::WideString;
+use widestring::U16CString;
+#[cfg(any(target_family = "windows"))]
+use winapi::winnt::LPWSTR;
 
 pub type BYTE = u8;
 pub type WORD = u16;
@@ -30,10 +33,55 @@ pub type RECORDPROC = extern "C" fn(HRECORD, *mut c_void, DWORD, *mut c_void) ->
 pub type IOSNOTIFYPROC = extern "C" fn(DWORD);
 
 #[cfg(any(target_family = "windows"))]
-pub type BassString = *const WideString;
+#[repr(C)]
+pub struct BassString {
+    content: LPWSTR
+}
 
 #[cfg(any(target_family = "unix"))]
-pub type BassString = *const c_char;
+#[repr(C)]
+pub struct BassString {
+    content: *const c_char
+}
+
+#[cfg(any(target_family = "windows"))]
+impl From<&str> for BassString {
+    fn from(item: &str) -> Self {
+        Self { 
+            content: U16CString::from_str(item).expect("Cannot convert &str to BassString").into_raw()
+        }
+    }
+}
+
+#[cfg(any(target_family = "unix"))]
+impl From<&str> for BassString {
+    fn from(item: &str) -> Self {
+        Self { 
+            content: CString::new(item).expect("Cannot convert &str to BassString").as_ptr() as *const c_char
+        }
+    }
+}
+
+impl From<String> for BassString {
+    fn from(item: String) -> Self {
+        BassString::from(item.as_str())
+    }
+}
+
+#[cfg(any(target_family = "windows"))]
+impl From<BassString> for String {
+    fn from(item: BassString) -> Self {
+        unsafe { U16CString::from_raw(item.content) }.to_string().expect("Cannot convert BassString to String")
+    }
+}
+
+
+#[cfg(any(target_family = "unix"))]
+impl From<BassString> for String {
+    fn from(item: BassString) -> Self {
+        CString::from_raw(item.content).to_string().expect("Cannot convert BassString to String")
+    }
+}
 
 #[repr(C)]
 pub struct BassDeviceInfo {
