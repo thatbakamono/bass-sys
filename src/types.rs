@@ -35,20 +35,22 @@ pub type IOSNOTIFYPROC = extern "C" fn(DWORD);
 #[cfg(any(target_family = "windows"))]
 #[repr(C)]
 pub struct BassString {
-    content: LPWSTR
+    content: LPWSTR,
 }
 
 #[cfg(any(target_family = "unix"))]
 #[repr(C)]
 pub struct BassString {
-    content: *const c_char
+    content: *const c_char,
 }
 
 #[cfg(any(target_family = "windows"))]
 impl From<&str> for BassString {
     fn from(item: &str) -> Self {
-        Self { 
-            content: U16CString::from_str(item).expect("Cannot convert &str to BassString").into_raw()
+        Self {
+            content: U16CString::from_str(item)
+                .expect("Cannot convert &str to BassString")
+                .into_raw(),
         }
     }
 }
@@ -56,8 +58,10 @@ impl From<&str> for BassString {
 #[cfg(any(target_family = "unix"))]
 impl From<&str> for BassString {
     fn from(item: &str) -> Self {
-        Self { 
-            content: CString::new(item).expect("Cannot convert &str to BassString").as_ptr() as *const c_char
+        Self {
+            content: CString::new(item)
+                .expect("Cannot convert &str to BassString")
+                .as_ptr() as *const c_char,
         }
     }
 }
@@ -71,15 +75,18 @@ impl From<String> for BassString {
 #[cfg(any(target_family = "windows"))]
 impl From<BassString> for String {
     fn from(item: BassString) -> Self {
-        unsafe { U16CString::from_raw(item.content) }.to_string().expect("Cannot convert BassString to String")
+        unsafe { U16CString::from_raw(item.content) }
+            .to_string()
+            .expect("Cannot convert BassString to String")
     }
 }
-
 
 #[cfg(any(target_family = "unix"))]
 impl From<BassString> for String {
     fn from(item: BassString) -> Self {
-        CString::from_raw(item.content).to_string().expect("Cannot convert BassString to String")
+        CString::from_raw(item.content)
+            .to_string()
+            .expect("Cannot convert BassString to String")
     }
 }
 
