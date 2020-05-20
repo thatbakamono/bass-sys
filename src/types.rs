@@ -1,4 +1,8 @@
-use std::{os::raw::{c_char, c_void}, convert::TryFrom, error::Error};
+use std::{
+    convert::TryFrom,
+    error::Error,
+    os::raw::{c_char, c_void},
+};
 #[cfg(any(target_family = "windows"))]
 use widestring::U16CString;
 #[cfg(any(target_family = "windows"))]
@@ -46,7 +50,7 @@ pub struct BassString {
 #[cfg(any(target_family = "windows"))]
 impl TryFrom<&str> for BassString {
     type Error = Box<dyn Error>;
-    
+
     fn try_from(item: &str) -> Result<Self, Self::Error> {
         Ok(Self {
             content: U16CString::from_str(item)?.into_raw(),
@@ -65,7 +69,7 @@ impl TryFrom<&str> for BassString {
 
 impl TryFrom<String> for BassString {
     type Error = Box<dyn Error>;
-    
+
     fn try_from(item: String) -> Result<Self, Self::Error> {
         BassString::try_from(item.as_str())
     }
@@ -76,7 +80,9 @@ impl TryFrom<BassString> for String {
     type Error = Box<dyn Error>;
 
     fn try_from(item: BassString) -> Result<Self, Self::Error> {
-        unsafe { U16CString::from_raw(item.content) }.to_string().map_err(Into::into)
+        unsafe { U16CString::from_raw(item.content) }
+            .to_string()
+            .map_err(Into::into)
     }
 }
 
