@@ -1,5 +1,4 @@
-use std::borrow::Cow;
-use std::os::raw::{c_char, c_void};
+use std::{os::raw::{c_char, c_void}, convert::TryFrom, error::Error};
 #[cfg(any(target_family = "windows"))]
 use widestring::U16CString;
 #[cfg(any(target_family = "windows"))]
@@ -45,48 +44,46 @@ pub struct BassString {
 }
 
 #[cfg(any(target_family = "windows"))]
-impl From<&str> for BassString {
-    fn from(item: &str) -> Self {
-        Self {
-            content: U16CString::from_str(item)
-                .expect("Cannot convert &str to BassString")
-                .into_raw(),
-        }
+impl TryFrom<&str> for BassString {
+    type Error = Box<dyn Error>;
+    
+    fn try_from(item: &str) -> Result<Self, Self::Error> {
+        Ok(Self {
+            content: U16CString::from_str(item)?.into_raw(),
+        })
     }
 }
 
 #[cfg(any(target_family = "unix"))]
-impl From<&str> for BassString {
-    fn from(item: &str) -> Self {
+impl TryFrom<&str> for BassString {
+    fn try_from(item: &str) -> Result<Self, Error> {
         Self {
-            content: CString::new(item)
-                .expect("Cannot convert &str to BassString")
-                .as_ptr() as *const c_char,
+            content: CString::new(item)?.as_ptr() as *const c_char,
         }
     }
 }
 
-impl From<String> for BassString {
-    fn from(item: String) -> Self {
-        BassString::from(item.as_str())
+impl TryFrom<String> for BassString {
+    type Error = Box<dyn Error>;
+    
+    fn try_from(item: String) -> Result<Self, Self::Error> {
+        BassString::try_from(item.as_str())
     }
 }
 
 #[cfg(any(target_family = "windows"))]
-impl From<BassString> for String {
-    fn from(item: BassString) -> Self {
-        unsafe { U16CString::from_raw(item.content) }
-            .to_string()
-            .expect("Cannot convert BassString to String")
+impl TryFrom<BassString> for String {
+    type Error = Box<dyn Error>;
+
+    fn try_from(item: BassString) -> Result<Self, Self::Error> {
+        unsafe { U16CString::from_raw(item.content) }.to_string().map_err(Into::into)
     }
 }
 
 #[cfg(any(target_family = "unix"))]
-impl From<BassString> for String {
-    fn from(item: BassString) -> Self {
-        CString::from_raw(item.content)
-            .to_string()
-            .expect("Cannot convert BassString to String")
+impl TryFrom<BassString> for String {
+    fn try_from(item: BassString) -> Result<Self, Error> {
+        CString::from_raw(item.content).to_string()
     }
 }
 
