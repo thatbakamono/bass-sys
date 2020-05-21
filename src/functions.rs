@@ -1,9 +1,9 @@
 use crate::types::{
-    Bass3DVector, BassChannelInfo, BassDeviceInfo, BassFileProcs, BassInfo, BassPluginInfo,
+    BassString, Bass3DVector, BassChannelInfo, BassDeviceInfo, BassFileProcs, BassInfo, BassPluginInfo,
     BassRecordInfo, BassSample, BOOL, DOWNLOADPROC, DSPPROC, DWORD, HCHANNEL, HDSP, HFX, HMUSIC,
     HPLUGIN, HRECORD, HSAMPLE, HSTREAM, HSYNC, QWORD, RECORDPROC, STREAMPROC, SYNCPROC,
 };
-use std::os::raw::{c_char, c_int, c_void};
+use std::os::raw::{c_int, c_void};
 
 #[allow(dead_code)]
 extern "C" {
@@ -33,7 +33,7 @@ extern "C" {
     pub fn BASS_IsStarted() -> BOOL;
     pub fn BASS_SetVolume(value: f32) -> BOOL;
     pub fn BASS_GetVolume() -> f32;
-    pub fn BASS_PluginLoad(file: *mut c_char, flags: DWORD) -> HPLUGIN;
+    pub fn BASS_PluginLoad(file: BassString, flags: DWORD) -> HPLUGIN;
     pub fn BASS_PluginFree(handle: HPLUGIN) -> BOOL;
     pub fn BASS_PluginGetInfo(handle: HPLUGIN) -> *mut BassPluginInfo;
     pub fn BASS_Set3DFactors(distance: f32, roll: f32, doppler_factor: f32) -> BOOL;
@@ -60,7 +60,7 @@ extern "C" {
     ) -> BOOL;
     pub fn BASS_MusicLoad(
         memory: BOOL,
-        file: *const c_char,
+        file: BassString,
         offset: QWORD,
         length: DWORD,
         flags: DWORD,
@@ -69,7 +69,7 @@ extern "C" {
     pub fn BASS_MusicFree(handle: HMUSIC) -> BOOL;
     pub fn BASS_SampleLoad(
         memory: BOOL,
-        file: *const c_char,
+        file: BassString,
         offset: QWORD,
         length: DWORD,
         maximum: DWORD,
@@ -99,13 +99,13 @@ extern "C" {
     ) -> HSTREAM;
     pub fn BASS_StreamCreateFile(
         memory: BOOL,
-        file: *const c_char,
+        file: BassString,
         offset: QWORD,
         length: QWORD,
         flags: DWORD,
     ) -> HSTREAM;
     pub fn BASS_StreamCreateURL(
-        url: *const c_char,
+        url: BassString,
         offset: DWORD,
         flags: DWORD,
         proc: *mut DOWNLOADPROC,
@@ -127,7 +127,7 @@ extern "C" {
     pub fn BASS_RecordGetDevice() -> DWORD;
     pub fn BASS_RecordFree() -> BOOL;
     pub fn BASS_RecordGetInfo(info: *mut BassRecordInfo) -> BOOL;
-    pub fn BASS_RecordGetInputName(input: c_int) -> *const c_char;
+    pub fn BASS_RecordGetInputName(input: c_int) -> BassString;
     pub fn BASS_RecordSetInput(input: c_int, flags: DWORD, volume: f32) -> BOOL;
     pub fn BASS_RecordGetInput(input: c_int, volume: *mut f32) -> DWORD;
     pub fn BASS_RecordStart(
@@ -143,7 +143,7 @@ extern "C" {
     pub fn BASS_ChannelSetDevice(handle: DWORD, device: DWORD) -> BOOL;
     pub fn BASS_ChannelIsActive(handle: DWORD) -> DWORD;
     pub fn BASS_ChannelGetInfo(handle: DWORD, info: *mut BassChannelInfo) -> BOOL;
-    pub fn BASS_ChannelGetTags(handle: DWORD, tags: DWORD) -> *const c_char;
+    pub fn BASS_ChannelGetTags(handle: DWORD, tags: DWORD) -> BassString;
     pub fn BASS_ChannelFlags(handle: DWORD, flags: DWORD, mask: DWORD) -> DWORD;
     pub fn BASS_ChannelUpdate(handle: DWORD, length: DWORD) -> BOOL;
     pub fn BASS_ChannelLock(handle: DWORD, lock: BOOL) -> BOOL;
