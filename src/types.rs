@@ -3,6 +3,8 @@ use std::{
     error::Error,
     os::raw::{c_char, c_void},
 };
+#[cfg(any(target_family = "unix"))]
+use std::ffi::{CStr, CString};
 #[cfg(any(target_family = "windows"))]
 use widestring::U16CString;
 #[cfg(any(target_family = "windows"))]
@@ -60,10 +62,12 @@ impl TryFrom<&str> for BassString {
 
 #[cfg(any(target_family = "unix"))]
 impl TryFrom<&str> for BassString {
-    fn try_from(item: &str) -> Result<Self, Error> {
-        Self {
+    type Error = Box<dyn Error>;
+
+    fn try_from(item: &str) -> Result<Self, Self::Error> {
+        Ok(Self {
             content: CString::new(item)?.as_ptr() as *const c_char,
-        }
+        })
     }
 }
 
@@ -88,8 +92,10 @@ impl TryFrom<BassString> for String {
 
 #[cfg(any(target_family = "unix"))]
 impl TryFrom<BassString> for String {
-    fn try_from(item: BassString) -> Result<Self, Error> {
-        CString::from_raw(item.content).to_string()
+    type Error = Box<dyn Error>;
+
+    fn try_from(item: BassString) -> Result<Self, Self::Error> {
+        Ok(String::from(unsafe { CStr::from_ptr(item.content) }.to_string_lossy()))
     }
 }
 
