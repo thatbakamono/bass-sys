@@ -10,11 +10,13 @@ fn main() {
 
     let out_dir = env::var("OUT_DIR").unwrap();
     let out_path = PathBuf::from(out_dir.clone());
+    let manifest_dir = env::var("CARGO_MANIFEST_DIR").unwrap();
+    let manifest_path = PathBuf::from(manifest_dir);
 
     match target_os.as_str() {
-        "windows" => { fs::copy("./lib/bass.dll", out_path.join("bass.dll")).unwrap(); },
-        "linux" => { fs::copy("./lib/libbass.so", out_path.join("libbass.so")).unwrap(); },
-        "macos" => { fs::copy("./lib/libbass.dylib", out_path.join("libbass.dylib")).unwrap(); },
+        "windows" => { fs::copy(manifest_path.join("lib/bass.dll"), out_path.join("bass.dll")).unwrap(); },
+        "linux" => { fs::copy(manifest_path.join("lib/libbass.so"), out_path.join("libbass.so")).unwrap(); },
+        "macos" => { fs::copy(manifest_path.join("lib/libbass.dylib"), out_path.join("libbass.dylib")).unwrap(); },
         _ => unreachable!(),
     }
 
