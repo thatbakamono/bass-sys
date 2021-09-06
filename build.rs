@@ -14,12 +14,15 @@ fn main() {
     let manifest_path = PathBuf::from(manifest_dir);
 
     match target_os.as_str() {
-        "windows" => { fs::copy(manifest_path.join("lib/bass.dll"), out_path.join("bass.dll")).unwrap(); },
+        "windows" => {
+            fs::copy(manifest_path.join("lib/bass.lib"), out_path.join("bass.lib")).unwrap();
+            fs::copy(manifest_path.join("lib/bass.dll"), out_path.join("bass.dll")).unwrap();
+        },
         "linux" => { fs::copy(manifest_path.join("lib/libbass.so"), out_path.join("libbass.so")).unwrap(); },
         "macos" => { fs::copy(manifest_path.join("lib/libbass.dylib"), out_path.join("libbass.dylib")).unwrap(); },
         _ => unreachable!(),
     }
 
     println!("cargo:rustc-link-search=native={}", out_dir);
-    println!("cargo:rustc-link-lib=bass");
+    println!("cargo:rustc-link-lib=dylib=bass");
 }
