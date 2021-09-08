@@ -1,14 +1,4 @@
-use std::{
-    convert::TryFrom,
-    error::Error,
-    os::raw::{c_char, c_void},
-};
-#[cfg(any(target_family = "unix"))]
-use std::ffi::{CStr, CString};
-#[cfg(any(target_family = "windows"))]
-use widestring::U16CString;
-#[cfg(any(target_family = "windows"))]
-use winapi::winnt::LPWSTR;
+use std::os::raw::{c_char, c_void};
 
 pub type BYTE = u8;
 pub type WORD = u16;
@@ -37,77 +27,15 @@ pub type DSPPROC = extern "C" fn(HDSP, DWORD, *mut c_void, DWORD, *mut c_void);
 pub type RECORDPROC = extern "C" fn(HRECORD, *mut c_void, DWORD, *mut c_void) -> BOOL;
 pub type IOSNOTIFYPROC = extern "C" fn(DWORD);
 
-#[cfg(any(target_family = "windows"))]
-#[repr(C)]
-pub struct BassString {
-    content: LPWSTR,
-}
-
-#[cfg(any(target_family = "unix"))]
-#[repr(C)]
-pub struct BassString {
-    content: *const c_char,
-}
-
-#[cfg(any(target_family = "windows"))]
-impl TryFrom<&str> for BassString {
-    type Error = Box<dyn Error>;
-
-    fn try_from(item: &str) -> Result<Self, Self::Error> {
-        Ok(Self {
-            content: U16CString::from_str(item)?.into_raw(),
-        })
-    }
-}
-
-#[cfg(any(target_family = "unix"))]
-impl TryFrom<&str> for BassString {
-    type Error = Box<dyn Error>;
-
-    fn try_from(item: &str) -> Result<Self, Self::Error> {
-        Ok(Self {
-            content: CString::new(item)?.as_ptr() as *const c_char,
-        })
-    }
-}
-
-impl TryFrom<String> for BassString {
-    type Error = Box<dyn Error>;
-
-    fn try_from(item: String) -> Result<Self, Self::Error> {
-        BassString::try_from(item.as_str())
-    }
-}
-
-#[cfg(any(target_family = "windows"))]
-impl TryFrom<BassString> for String {
-    type Error = Box<dyn Error>;
-
-    fn try_from(item: BassString) -> Result<Self, Self::Error> {
-        unsafe { U16CString::from_raw(item.content) }
-            .to_string()
-            .map_err(Into::into)
-    }
-}
-
-#[cfg(any(target_family = "unix"))]
-impl TryFrom<BassString> for String {
-    type Error = Box<dyn Error>;
-
-    fn try_from(item: BassString) -> Result<Self, Self::Error> {
-        Ok(String::from(unsafe { CStr::from_ptr(item.content) }.to_string_lossy()))
-    }
-}
-
 #[repr(C)]
 pub struct BassDeviceInfo {
-    name: BassString,
-    driver: BassString,
+    name: *const c_void,
+    driver: *const c_void,
     flags: DWORD,
 }
 
 impl BassDeviceInfo {
-    pub fn new(name: BassString, driver: BassString, flags: DWORD) -> Self {
+    pub fn new(name: *const c_void, driver: *const c_void, flags: DWORD) -> Self {
         Self {
             name,
             driver,
@@ -273,7 +201,7 @@ pub struct BassChannelInfo {
     original_resolution: DWORD,
     plugin: HPLUGIN,
     sample: HSAMPLE,
-    file_name: *mut c_char,
+    file_name: *const c_char,
 }
 
 impl BassChannelInfo {
@@ -285,7 +213,7 @@ impl BassChannelInfo {
         original_resolution: DWORD,
         plugin: HPLUGIN,
         sample: HSAMPLE,
-        file_name: *mut c_char,
+        file_name: *const c_char,
     ) -> Self {
         Self {
             default_frequency,
@@ -302,12 +230,12 @@ impl BassChannelInfo {
 
 #[repr(C)]
 pub struct BassPluginForm {
-    name: BassString,
-    file_extension_filter: BassString,
+    name: *const c_void,
+    file_extension_filter: *const c_void,
 }
 
 impl BassPluginForm {
-    pub fn new(name: BassString, file_extension_filter: BassString) -> Self {
+    pub fn new(name: *const c_void, file_extension_filter: *const c_void) -> Self {
         Self {
             name,
             file_extension_filter,
