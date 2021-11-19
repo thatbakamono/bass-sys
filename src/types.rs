@@ -29,9 +29,9 @@ pub type IOSNOTIFYPROC = extern "C" fn(DWORD);
 
 #[repr(C)]
 pub struct BassDeviceInfo {
-    name: *const c_void,
-    driver: *const c_void,
-    flags: DWORD,
+    pub name: *const c_void,
+    pub driver: *const c_void,
+    pub flags: DWORD,
 }
 
 impl BassDeviceInfo {
@@ -47,20 +47,20 @@ impl BassDeviceInfo {
 #[repr(C)]
 #[derive(Default, Debug, Clone)]
 pub struct BassInfo {
-    flags: DWORD,
-    size_of_hardware_memory: DWORD,
-    size_of_free_hardware_memory: DWORD,
-    free_samples: DWORD,
-    free_3d_sample_slots: DWORD,
-    minimum_sample_rate: DWORD,
-    maxiumum_sample_rate: DWORD,
-    eax_support: BOOL,
-    minimum_buffer_length: DWORD,
-    direct_sound_version: DWORD,
-    latency: DWORD,
-    init_flags: DWORD,
-    speakers: DWORD,
-    output_frequency: DWORD,
+    pub flags: DWORD,
+    pub size_of_hardware_memory: DWORD,
+    pub size_of_free_hardware_memory: DWORD,
+    pub free_samples: DWORD,
+    pub free_3d_sample_slots: DWORD,
+    pub minimum_sample_rate: DWORD,
+    pub maxiumum_sample_rate: DWORD,
+    pub eax_support: BOOL,
+    pub minimum_buffer_length: DWORD,
+    pub direct_sound_version: DWORD,
+    pub latency: DWORD,
+    pub init_flags: DWORD,
+    pub speakers: DWORD,
+    pub output_frequency: DWORD,
 }
 
 impl BassInfo {
@@ -102,11 +102,11 @@ impl BassInfo {
 #[repr(C)]
 #[derive(Default, Debug, Clone)]
 pub struct BassRecordInfo {
-    flags: DWORD,
-    supported_formats: DWORD,
-    number_of_inputs: DWORD,
-    single_in: BOOL,
-    current_frequency: DWORD,
+    pub flags: DWORD,
+    pub supported_formats: DWORD,
+    pub number_of_inputs: DWORD,
+    pub single_in: BOOL,
+    pub current_frequency: DWORD,
 }
 
 impl BassRecordInfo {
@@ -130,23 +130,23 @@ impl BassRecordInfo {
 #[repr(C)]
 #[derive(Default, Debug, Clone)]
 pub struct BassSample {
-    default_frequency: DWORD,
-    volume: f32,
-    pan: f32,
-    flags: DWORD,
-    length: DWORD,
-    maximum_simultaneous_playbacks: DWORD,
-    original_resolution: DWORD,
-    number_of_channels: DWORD,
-    minimum_gap: DWORD,
-    mode_3d: DWORD,
-    minimum_distance: f32,
-    maximum_distance: f32,
-    angle_of_inside_projection_cone: DWORD,
-    angle_of_outside_projection_cone: DWORD,
-    volume_delta_of_outside_projection_cone: f32,
-    voice_allocation_flags: DWORD,
-    priority: DWORD,
+    pub default_frequency: DWORD,
+    pub volume: f32,
+    pub pan: f32,
+    pub flags: DWORD,
+    pub length: DWORD,
+    pub maximum_simultaneous_playbacks: DWORD,
+    pub original_resolution: DWORD,
+    pub number_of_channels: DWORD,
+    pub minimum_gap: DWORD,
+    pub mode_3d: DWORD,
+    pub minimum_distance: f32,
+    pub maximum_distance: f32,
+    pub angle_of_inside_projection_cone: DWORD,
+    pub angle_of_outside_projection_cone: DWORD,
+    pub volume_delta_of_outside_projection_cone: f32,
+    pub voice_allocation_flags: DWORD,
+    pub priority: DWORD,
 }
 
 impl BassSample {
@@ -194,14 +194,14 @@ impl BassSample {
 #[repr(C)]
 #[derive(Debug, Clone)]
 pub struct BassChannelInfo {
-    default_frequency: DWORD,
-    channels: DWORD,
-    flags: DWORD,
-    type_of_channel: DWORD,
-    original_resolution: DWORD,
-    plugin: HPLUGIN,
-    sample: HSAMPLE,
-    file_name: *const c_char,
+    pub default_frequency: DWORD,
+    pub channels: DWORD,
+    pub flags: DWORD,
+    pub type_of_channel: DWORD,
+    pub original_resolution: DWORD,
+    pub plugin: HPLUGIN,
+    pub sample: HSAMPLE,
+    pub file_name: *const c_char,
 }
 
 impl BassChannelInfo {
@@ -230,8 +230,8 @@ impl BassChannelInfo {
 
 #[repr(C)]
 pub struct BassPluginForm {
-    name: *const c_void,
-    file_extension_filter: *const c_void,
+    pub name: *const c_void,
+    pub file_extension_filter: *const c_void,
 }
 
 impl BassPluginForm {
@@ -246,9 +246,9 @@ impl BassPluginForm {
 #[repr(C)]
 #[derive(Debug, Clone)]
 pub struct BassPluginInfo {
-    version: DWORD,
-    format_count: DWORD,
-    formats: *mut BassPluginForm,
+    pub version: DWORD,
+    pub format_count: DWORD,
+    pub formats: *mut BassPluginForm,
 }
 
 impl BassPluginInfo {
@@ -264,9 +264,9 @@ impl BassPluginInfo {
 #[repr(C)]
 #[derive(Default, Debug, Clone)]
 pub struct Bass3DVector {
-    x: f32,
-    y: f32,
-    z: f32,
+    pub x: f32,
+    pub y: f32,
+    pub z: f32,
 }
 
 impl Bass3DVector {
@@ -278,10 +278,10 @@ impl Bass3DVector {
 #[repr(C)]
 #[derive(Debug, Clone)]
 pub struct BassFileProcs {
-    close_handle: *mut FILECLOSEPROC,
-    length_handle: *mut FILELENPROC,
-    read_handle: *mut FILEREADPROC,
-    seek_handle: *mut FILESEEKPROC,
+    pub close_handle: *mut FILECLOSEPROC,
+    pub length_handle: *mut FILELENPROC,
+    pub read_handle: *mut FILEREADPROC,
+    pub seek_handle: *mut FILESEEKPROC,
 }
 
 impl BassFileProcs {
@@ -303,13 +303,13 @@ impl BassFileProcs {
 #[repr(C)]
 #[derive(Default, Debug, Clone)]
 pub struct TagId3 {
-    id: [c_char; 3],
-    title: [c_char; 30],
-    artist: [c_char; 30],
-    album: [c_char; 30],
-    year: [c_char; 4],
-    comment: [c_char; 30],
-    genre: BYTE,
+    pub id: [c_char; 3],
+    pub title: [c_char; 30],
+    pub artist: [c_char; 30],
+    pub album: [c_char; 30],
+    pub year: [c_char; 4],
+    pub comment: [c_char; 30],
+    pub genre: BYTE,
 }
 
 impl TagId3 {
@@ -337,9 +337,9 @@ impl TagId3 {
 #[repr(C)]
 #[derive(Debug, Clone)]
 pub struct TagApeBinary {
-    key: *mut c_char,
-    data: *mut c_void,
-    length: DWORD,
+    pub key: *mut c_char,
+    pub data: *mut c_void,
+    pub length: DWORD,
 }
 
 impl TagApeBinary {
@@ -351,16 +351,16 @@ impl TagApeBinary {
 #[repr(C)]
 
 pub struct TagBext {
-    description: [c_char; 256],
-    originator: [c_char; 32],
-    originator_reference: [c_char; 32],
-    originator_date: [c_char; 10],
-    originator_time: [c_char; 8],
-    time_reference: QWORD,
-    version: WORD,
-    umid: [BYTE; 64],
-    reserved: [BYTE; 190],
-    coding_history: Vec<c_char>,
+    pub description: [c_char; 256],
+    pub originator: [c_char; 32],
+    pub originator_reference: [c_char; 32],
+    pub originator_date: [c_char; 10],
+    pub originator_time: [c_char; 8],
+    pub time_reference: QWORD,
+    pub version: WORD,
+    pub umid: [BYTE; 64],
+    pub reserved: [BYTE; 190],
+    pub coding_history: Vec<c_char>,
 }
 
 impl TagBext {
@@ -394,8 +394,8 @@ impl TagBext {
 #[repr(C)]
 #[derive(Default, Debug, Clone)]
 pub struct TagCartTimer {
-    timer_usage_id: DWORD,
-    timer_value: DWORD,
+    pub timer_usage_id: DWORD,
+    pub timer_value: DWORD,
 }
 
 impl TagCartTimer {
@@ -410,26 +410,26 @@ impl TagCartTimer {
 #[repr(C)]
 
 pub struct TagCart {
-    version: [c_char; 4],
-    title: [c_char; 64],
-    artist: [c_char; 64],
-    cut_id: [c_char; 64],
-    client_id: [c_char; 64],
-    category: [c_char; 64],
-    classification: [c_char; 64],
-    out_cue: [c_char; 64],
-    start_date: [c_char; 10],
-    start_time: [c_char; 8],
-    end_date: [c_char; 10],
-    end_time: [c_char; 8],
-    procuder_app_id: [c_char; 64],
-    producer_app_version: [c_char; 64],
-    user_text: [c_char; 64],
-    sample_value_reference: DWORD,
-    post_timer: [TagCartTimer; 8],
-    reserved: [c_char; 276],
-    url: [c_char; 1024],
-    tag_text: Vec<c_char>,
+    pub version: [c_char; 4],
+    pub title: [c_char; 64],
+    pub artist: [c_char; 64],
+    pub cut_id: [c_char; 64],
+    pub client_id: [c_char; 64],
+    pub category: [c_char; 64],
+    pub classification: [c_char; 64],
+    pub out_cue: [c_char; 64],
+    pub start_date: [c_char; 10],
+    pub start_time: [c_char; 8],
+    pub end_date: [c_char; 10],
+    pub end_time: [c_char; 8],
+    pub procuder_app_id: [c_char; 64],
+    pub producer_app_version: [c_char; 64],
+    pub user_text: [c_char; 64],
+    pub sample_value_reference: DWORD,
+    pub post_timer: [TagCartTimer; 8],
+    pub reserved: [c_char; 276],
+    pub url: [c_char; 1024],
+    pub tag_text: Vec<c_char>,
 }
 
 impl TagCart {
@@ -483,12 +483,12 @@ impl TagCart {
 #[repr(C)]
 #[derive(Default, Debug, Clone)]
 pub struct TagCuePoint {
-    name: DWORD,
-    position: DWORD,
-    chunk: DWORD,
-    chun_start: DWORD,
-    block_start: DWORD,
-    sample_offset: DWORD,
+    pub name: DWORD,
+    pub position: DWORD,
+    pub chunk: DWORD,
+    pub chun_start: DWORD,
+    pub block_start: DWORD,
+    pub sample_offset: DWORD,
 }
 
 impl TagCuePoint {
@@ -514,8 +514,8 @@ impl TagCuePoint {
 #[repr(C)]
 #[derive(Default, Debug, Clone)]
 pub struct TagCue {
-    cue_points_count: DWORD,
-    cue_points: Vec<TagCuePoint>,
+    pub cue_points_count: DWORD,
+    pub cue_points: Vec<TagCuePoint>,
 }
 
 impl TagCue {
@@ -530,12 +530,12 @@ impl TagCue {
 #[repr(C)]
 #[derive(Default, Debug, Clone)]
 pub struct TagSampleLoop {
-    identifier: DWORD,
-    sample_type: DWORD,
-    start: DWORD,
-    end: DWORD,
-    fraction: DWORD,
-    play_count: DWORD,
+    pub identifier: DWORD,
+    pub sample_type: DWORD,
+    pub start: DWORD,
+    pub end: DWORD,
+    pub fraction: DWORD,
+    pub play_count: DWORD,
 }
 
 impl TagSampleLoop {
@@ -561,16 +561,16 @@ impl TagSampleLoop {
 #[repr(C)]
 #[derive(Default, Debug, Clone)]
 pub struct TagSample {
-    manufacturer: DWORD,
-    product: DWORD,
-    sample_period: DWORD,
-    midi_unity_note: DWORD,
-    midi_pitch_fraction: DWORD,
-    smpte_format: DWORD,
-    smpte_offset: DWORD,
-    sample_loops_count: DWORD,
-    sampler_data: DWORD,
-    sample_loops: Vec<TagSampleLoop>,
+    pub manufacturer: DWORD,
+    pub product: DWORD,
+    pub sample_period: DWORD,
+    pub midi_unity_note: DWORD,
+    pub midi_pitch_fraction: DWORD,
+    pub smpte_format: DWORD,
+    pub smpte_offset: DWORD,
+    pub sample_loops_count: DWORD,
+    pub sampler_data: DWORD,
+    pub sample_loops: Vec<TagSampleLoop>,
 }
 
 impl TagSample {
@@ -604,9 +604,9 @@ impl TagSample {
 #[repr(C)]
 #[derive(Debug, Clone)]
 pub struct TagCaCodec {
-    file_type: DWORD,
-    audio_format: DWORD,
-    description: *mut c_char,
+    pub file_type: DWORD,
+    pub audio_format: DWORD,
+    pub description: *mut c_char,
 }
 
 impl TagCaCodec {
@@ -622,13 +622,13 @@ impl TagCaCodec {
 #[repr(C)]
 #[derive(Default, Debug, Clone)]
 pub struct WaveFormatEx {
-    format_tag: WORD,
-    channels_number: WORD,
-    samples_per_second: DWORD,
-    average_bytes_per_second: DWORD,
-    block_align: WORD,
-    bits_per_sample: WORD,
-    size: WORD,
+    pub format_tag: WORD,
+    pub channels_number: WORD,
+    pub samples_per_second: DWORD,
+    pub average_bytes_per_second: DWORD,
+    pub block_align: WORD,
+    pub bits_per_sample: WORD,
+    pub size: WORD,
 }
 
 impl WaveFormatEx {
@@ -656,13 +656,13 @@ impl WaveFormatEx {
 #[repr(C)]
 #[derive(Default, Debug, Clone)]
 pub struct BassDx8Chorus {
-    wet_dry_mix: f32,
-    depth: f32,
-    feedback: f32,
-    frequency: f32,
-    waveform: DWORD,
-    delay: f32,
-    phase: DWORD,
+    pub wet_dry_mix: f32,
+    pub depth: f32,
+    pub feedback: f32,
+    pub frequency: f32,
+    pub waveform: DWORD,
+    pub delay: f32,
+    pub phase: DWORD,
 }
 
 impl BassDx8Chorus {
@@ -692,12 +692,12 @@ impl BassDx8Chorus {
 #[repr(C)]
 #[derive(Default, Debug, Clone)]
 pub struct BassDx8Compressor {
-    gain: f32,
-    attack: f32,
-    release: f32,
-    threshold: f32,
-    ratio: f32,
-    predelay: f32,
+    pub gain: f32,
+    pub attack: f32,
+    pub release: f32,
+    pub threshold: f32,
+    pub ratio: f32,
+    pub predelay: f32,
 }
 
 impl BassDx8Compressor {
@@ -723,11 +723,11 @@ impl BassDx8Compressor {
 #[repr(C)]
 #[derive(Default, Debug, Clone)]
 pub struct BassDx8Distortion {
-    gain: f32,
-    edge: f32,
-    post_eq_center_frequency: f32,
-    post_eq_bandwidth: f32,
-    pre_lowpass_cutoff: f32,
+    pub gain: f32,
+    pub edge: f32,
+    pub post_eq_center_frequency: f32,
+    pub post_eq_bandwidth: f32,
+    pub pre_lowpass_cutoff: f32,
 }
 
 impl BassDx8Distortion {
@@ -751,11 +751,11 @@ impl BassDx8Distortion {
 #[repr(C)]
 #[derive(Default, Debug, Clone)]
 pub struct BassDx8Echo {
-    wet_dry_mix: f32,
-    feedback: f32,
-    left_delay: f32,
-    right_delay: f32,
-    pan_delay: f32,
+    pub wet_dry_mix: f32,
+    pub feedback: f32,
+    pub left_delay: f32,
+    pub right_delay: f32,
+    pub pan_delay: f32,
 }
 
 impl BassDx8Echo {
@@ -779,13 +779,13 @@ impl BassDx8Echo {
 #[repr(C)]
 #[derive(Default, Debug, Clone)]
 pub struct BassDx8Flanger {
-    wet_dry_mix: f32,
-    depth: f32,
-    feedback: f32,
-    frequency: f32,
-    waveform: DWORD,
-    delay: f32,
-    phase: DWORD,
+    pub wet_dry_mix: f32,
+    pub depth: f32,
+    pub feedback: f32,
+    pub frequency: f32,
+    pub waveform: DWORD,
+    pub delay: f32,
+    pub phase: DWORD,
 }
 
 impl BassDx8Flanger {
@@ -815,8 +815,8 @@ impl BassDx8Flanger {
 #[repr(C)]
 #[derive(Default, Debug, Clone)]
 pub struct BassDx8Gargle {
-    rate_hz: DWORD,
-    wave_shape: DWORD,
+    pub rate_hz: DWORD,
+    pub wave_shape: DWORD,
 }
 
 impl BassDx8Gargle {
@@ -833,18 +833,18 @@ impl BassDx8Gargle {
 #[repr(C)]
 #[derive(Default, Debug, Clone)]
 pub struct BassDx8I3Dl2Reverb {
-    room: i32,
-    room_hf: i32,
-    room_rolloff_factor: f32,
-    decay_time: f32,
-    decay_hf_ratio: f32,
-    reflections: i32,
-    reflections_delay: f32,
-    reverb: i32,
-    reverb_delay: f32,
-    diffusion: f32,
-    density: f32,
-    hf_reference: f32,
+    pub room: i32,
+    pub room_hf: i32,
+    pub room_rolloff_factor: f32,
+    pub decay_time: f32,
+    pub decay_hf_ratio: f32,
+    pub reflections: i32,
+    pub reflections_delay: f32,
+    pub reverb: i32,
+    pub reverb_delay: f32,
+    pub diffusion: f32,
+    pub density: f32,
+    pub hf_reference: f32,
 }
 
 impl BassDx8I3Dl2Reverb {
@@ -895,9 +895,9 @@ impl BassDx8I3Dl2Reverb {
 #[repr(C)]
 #[derive(Default, Debug, Clone)]
 pub struct BassDx8ParamEq {
-    center: f32,
-    bandwidth: f32,
-    gain: f32,
+    pub center: f32,
+    pub bandwidth: f32,
+    pub gain: f32,
 }
 
 impl BassDx8ParamEq {
@@ -913,10 +913,10 @@ impl BassDx8ParamEq {
 #[repr(C)]
 #[derive(Default, Debug, Clone)]
 pub struct BassDx8Reverb {
-    gain: f32,
-    reverb_mix: f32,
-    reverb_time: f32,
-    high_frequency_rt_ratio: f32,
+    pub gain: f32,
+    pub reverb_mix: f32,
+    pub reverb_time: f32,
+    pub high_frequency_rt_ratio: f32,
 }
 
 impl BassDx8Reverb {
@@ -938,10 +938,10 @@ impl BassDx8Reverb {
 #[repr(C)]
 #[derive(Default, Debug, Clone)]
 pub struct BassFxVolumeParam {
-    target: f32,
-    current: f32,
-    time: f32,
-    curve: DWORD,
+    pub target: f32,
+    pub current: f32,
+    pub time: f32,
+    pub curve: DWORD,
 }
 
 impl BassFxVolumeParam {
