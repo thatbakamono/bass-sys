@@ -28,6 +28,7 @@ pub type RECORDPROC = extern "C" fn(HRECORD, *mut c_void, DWORD, *mut c_void) ->
 pub type IOSNOTIFYPROC = extern "C" fn(DWORD);
 
 #[repr(C)]
+#[derive(Debug, Clone)]
 pub struct BassDeviceInfo {
     pub name: *const c_void,
     pub driver: *const c_void,
@@ -229,6 +230,7 @@ impl BassChannelInfo {
 }
 
 #[repr(C)]
+#[derive(Debug, Clone)]
 pub struct BassPluginForm {
     pub name: *const c_void,
     pub file_extension_filter: *const c_void,
@@ -349,7 +351,7 @@ impl TagApeBinary {
 }
 
 #[repr(C)]
-
+#[derive(Debug, Clone)]
 pub struct TagBext {
     pub description: [c_char; 256],
     pub originator: [c_char; 32],
@@ -408,7 +410,7 @@ impl TagCartTimer {
 }
 
 #[repr(C)]
-
+#[derive(Debug, Clone)]
 pub struct TagCart {
     pub version: [c_char; 4],
     pub title: [c_char; 64],
