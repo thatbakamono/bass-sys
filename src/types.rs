@@ -350,8 +350,7 @@ impl TagApeBinary {
     }
 }
 
-#[repr(C)]
-#[derive(Debug, Clone)]
+#[repr(C, packed(1))]
 pub struct TagBext {
     pub description: [c_char; 256],
     pub originator: [c_char; 32],
@@ -621,8 +620,8 @@ impl TagCaCodec {
     }
 }
 
-#[repr(C)]
-#[derive(Default, Debug, Clone)]
+#[repr(C, packed(1))]
+#[derive(Default)]
 pub struct WaveFormatEx {
     pub format_tag: WORD,
     pub channels_number: WORD,
