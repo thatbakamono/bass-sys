@@ -677,8 +677,6 @@ impl BassDx8Chorus {
         delay: f32,
         phase: DWORD,
     ) -> Self {
-        assert!((0..=1).contains(&waveform));
-
         Self {
             wet_dry_mix,
             depth,
@@ -800,8 +798,6 @@ impl BassDx8Flanger {
         delay: f32,
         phase: DWORD,
     ) -> Self {
-        assert!((0..=1).contains(&waveform));
-
         Self {
             wet_dry_mix,
             depth,
@@ -823,8 +819,6 @@ pub struct BassDx8Gargle {
 
 impl BassDx8Gargle {
     pub fn new(rate_hz: DWORD, wave_shape: DWORD) -> Self {
-        assert!((0..=1).contains(&wave_shape));
-
         Self {
             rate_hz,
             wave_shape,
@@ -864,19 +858,6 @@ impl BassDx8I3Dl2Reverb {
         density: f32,
         hf_reference: f32,
     ) -> Self {
-        assert!((-10000..=0).contains(&room));
-        assert!((-10000..=0).contains(&room_hf));
-        assert!((0.0..=10.0).contains(&room_rolloff_factor));
-        assert!((0.1..=20.0).contains(&decay_time));
-        assert!((0.1..=2.0).contains(&decay_hf_ratio));
-        assert!((-10000..=1000).contains(&reflections));
-        assert!((0.0..=0.3).contains(&reflections_delay));
-        assert!((-10000..=2000).contains(&reverb));
-        assert!((0.0..=0.1).contains(&reverb_delay));
-        assert!((0.0..=100.0).contains(&diffusion));
-        assert!((0.0..=100.0).contains(&density));
-        assert!((20.0..=20000.0).contains(&hf_reference));
-
         Self {
             room,
             room_hf,
@@ -923,11 +904,6 @@ pub struct BassDx8Reverb {
 
 impl BassDx8Reverb {
     pub fn new(gain: f32, reverb_mix: f32, reverb_time: f32, high_frequency_rt_ratio: f32) -> Self {
-        assert!((-96.0..=0.0).contains(&gain));
-        assert!((-96.0..=0.0).contains(&reverb_mix));
-        assert!((0.001..=3000.0).contains(&reverb_time));
-        assert!((0.001..=0.999).contains(&high_frequency_rt_ratio));
-
         Self {
             gain,
             reverb_mix,
