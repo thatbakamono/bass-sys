@@ -1,3 +1,4 @@
+use std::alloc::{self, Layout, LayoutError};
 use std::os::raw::{c_char, c_void};
 
 pub type BYTE = u8;
@@ -361,11 +362,11 @@ pub struct TagBext {
     pub version: WORD,
     pub umid: [BYTE; 64],
     pub reserved: [BYTE; 190],
-    pub coding_history: Vec<c_char>,
+    pub coding_history: [c_char; 0],
 }
 
 impl TagBext {
-    pub fn new(
+    pub fn new<T: AsRef<[c_char]>>(
         description: [c_char; 256],
         originator: [c_char; 32],
         originator_reference: [c_char; 32],
@@ -375,20 +376,36 @@ impl TagBext {
         version: WORD,
         umid: [BYTE; 64],
         reserved: [BYTE; 190],
-        coding_history: Vec<c_char>,
-    ) -> Self {
-        Self {
-            description,
-            originator,
-            originator_reference,
-            originator_date,
-            originator_time,
-            time_reference,
-            version,
-            umid,
-            reserved,
-            coding_history,
+        coding_history: &T,
+    ) -> Result<Box<Self>, LayoutError> {
+        let coding_history_layout = Layout::array::<c_char>(coding_history.as_ref().len())?;
+        let (tag_bext_layout, _) = Layout::new::<TagBext>()
+            .extend(coding_history_layout)?;
+        let tag_bext_layout = tag_bext_layout.pad_to_align();
+
+        let tag_bext = unsafe { alloc::alloc(tag_bext_layout) }.cast::<TagBext>();
+
+        if tag_bext.is_null() {
+            alloc::handle_alloc_error(tag_bext_layout);
         }
+
+        unsafe {
+            (*tag_bext).description = description;
+            (*tag_bext).originator = originator;
+            (*tag_bext).originator_reference = originator_reference;
+            (*tag_bext).originator_date = originator_date;
+            (*tag_bext).originator_time = originator_time;
+            (*tag_bext).time_reference = time_reference;
+            (*tag_bext).version = version;
+            (*tag_bext).umid = umid;
+            (*tag_bext).reserved = reserved;
+        }
+
+        for (index, value) in coding_history.as_ref().iter().enumerate() {
+            unsafe { (*tag_bext).coding_history[index] = *value };
+        }
+
+        Ok(unsafe { Box::from_raw(tag_bext) })
     }
 }
 
@@ -430,11 +447,11 @@ pub struct TagCart {
     pub post_timer: [TagCartTimer; 8],
     pub reserved: [c_char; 276],
     pub url: [c_char; 1024],
-    pub tag_text: Vec<c_char>,
+    pub tag_text: [c_char; 0],
 }
 
 impl TagCart {
-    pub fn new(
+    pub fn new<T: AsRef<[c_char]>>(
         version: [c_char; 4],
         title: [c_char; 64],
         artist: [c_char; 64],
@@ -454,30 +471,46 @@ impl TagCart {
         post_timer: [TagCartTimer; 8],
         reserved: [c_char; 276],
         url: [c_char; 1024],
-        tag_text: Vec<c_char>,
-    ) -> Self {
-        Self {
-            version,
-            title,
-            artist,
-            cut_id,
-            client_id,
-            category,
-            classification,
-            out_cue,
-            start_date,
-            start_time,
-            end_date,
-            end_time,
-            procuder_app_id,
-            producer_app_version,
-            user_text,
-            sample_value_reference,
-            post_timer,
-            reserved,
-            url,
-            tag_text,
+        tag_text: &T,
+    ) -> Result<Box<Self>, LayoutError> {
+        let tag_text_layout = Layout::array::<c_char>(tag_text.as_ref().len())?;
+        let (tag_cart_layout, _) = Layout::new::<TagCart>()
+            .extend(tag_text_layout)?;
+        let tag_cart_layout = tag_cart_layout.pad_to_align();
+
+        let tag_cart = unsafe { alloc::alloc(tag_cart_layout) }.cast::<TagCart>();
+
+        if tag_cart.is_null() {
+            alloc::handle_alloc_error(tag_cart_layout);
         }
+
+        unsafe {
+            (*tag_cart).version = version;
+            (*tag_cart).title = title;
+            (*tag_cart).artist = artist;
+            (*tag_cart).cut_id = cut_id;
+            (*tag_cart).client_id = client_id;
+            (*tag_cart).category = category;
+            (*tag_cart).classification = classification;
+            (*tag_cart).out_cue = out_cue;
+            (*tag_cart).start_date = start_date;
+            (*tag_cart).start_time = start_time;
+            (*tag_cart).end_date = end_date;
+            (*tag_cart).end_time = end_time;
+            (*tag_cart).procuder_app_id = procuder_app_id;
+            (*tag_cart).producer_app_version = producer_app_version;
+            (*tag_cart).user_text = user_text;
+            (*tag_cart).sample_value_reference = sample_value_reference;
+            (*tag_cart).post_timer = post_timer;
+            (*tag_cart).reserved = reserved;
+            (*tag_cart).url = url;
+        }
+
+        for (index, value) in tag_text.as_ref().iter().enumerate() {
+            unsafe { (*tag_cart).tag_text[index] = *value };
+        }
+
+        Ok(unsafe { Box::from_raw(tag_cart) })
     }
 }
 
@@ -516,15 +549,31 @@ impl TagCuePoint {
 #[derive(Default, Debug, Clone)]
 pub struct TagCue {
     pub cue_points_count: DWORD,
-    pub cue_points: Vec<TagCuePoint>,
+    pub cue_points: [TagCuePoint; 0],
 }
 
 impl TagCue {
-    pub fn new(cue_points_count: DWORD, cue_points: Vec<TagCuePoint>) -> Self {
-        Self {
-            cue_points_count,
-            cue_points,
+    pub fn new<T: AsRef<[TagCuePoint]>>(cue_points_count: DWORD, cue_points: &T) -> Result<Box<Self>, LayoutError> {
+        assert!(cue_points_count as usize == cue_points.as_ref().len());
+
+        let cue_points_layout = Layout::array::<TagCuePoint>(cue_points.as_ref().len())?;
+        let (tag_cue_layout, _) = Layout::new::<TagCue>()
+            .extend(cue_points_layout)?;
+        let tag_cue_layout = tag_cue_layout.pad_to_align();
+
+        let tag_cue = unsafe { alloc::alloc(tag_cue_layout) }.cast::<TagCue>();
+
+        if tag_cue.is_null() {
+            alloc::handle_alloc_error(tag_cue_layout);
         }
+
+        unsafe { (*tag_cue).cue_points_count = cue_points_count };
+
+        for (index, value) in cue_points.as_ref().iter().enumerate() {
+            unsafe { (*tag_cue).cue_points[index] = value.clone() };
+        }
+
+        Ok(unsafe { Box::from_raw(tag_cue) })
     }
 }
 
@@ -571,11 +620,11 @@ pub struct TagSample {
     pub smpte_offset: DWORD,
     pub sample_loops_count: DWORD,
     pub sampler_data: DWORD,
-    pub sample_loops: Vec<TagSampleLoop>,
+    pub sample_loops: [TagSampleLoop; 0],
 }
 
 impl TagSample {
-    pub fn new(
+    pub fn new<T: AsRef<[TagSampleLoop]>>(
         manufacturer: DWORD,
         product: DWORD,
         sample_period: DWORD,
@@ -585,20 +634,38 @@ impl TagSample {
         smpte_offset: DWORD,
         sample_loops_count: DWORD,
         sampler_data: DWORD,
-        sample_loops: Vec<TagSampleLoop>,
-    ) -> Self {
-        Self {
-            manufacturer,
-            product,
-            sample_period,
-            midi_unity_note,
-            midi_pitch_fraction,
-            smpte_format,
-            smpte_offset,
-            sample_loops_count,
-            sampler_data,
-            sample_loops,
+        sample_loops: &T,
+    ) -> Result<Box<Self>, LayoutError> {
+        assert!(sample_loops_count as usize == sample_loops.as_ref().len());
+
+        let sample_loops_layout = Layout::array::<TagSampleLoop>(sample_loops.as_ref().len())?;
+        let (tag_sample_layout, _) = Layout::new::<TagSample>()
+            .extend(sample_loops_layout)?;
+        let tag_sample_layout = tag_sample_layout.pad_to_align();
+
+        let tag_sample = unsafe { alloc::alloc(tag_sample_layout) }.cast::<TagSample>();
+
+        if tag_sample.is_null() {
+            alloc::handle_alloc_error(tag_sample_layout);
         }
+
+        unsafe { 
+            (*tag_sample).manufacturer = manufacturer;
+            (*tag_sample).product = product;
+            (*tag_sample).sample_period = sample_period;
+            (*tag_sample).midi_unity_note = midi_unity_note;
+            (*tag_sample).midi_pitch_fraction = midi_pitch_fraction;
+            (*tag_sample).smpte_format = smpte_format;
+            (*tag_sample).smpte_offset = smpte_offset;
+            (*tag_sample).sample_loops_count = sample_loops_count;
+            (*tag_sample).sampler_data = sampler_data;
+        }
+
+        for (index, value) in sample_loops.as_ref().iter().enumerate() {
+            unsafe { (*tag_sample).sample_loops[index] = value.clone() };
+        }
+
+        Ok(unsafe { Box::from_raw(tag_sample) })
     }
 }
 
