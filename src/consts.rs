@@ -289,6 +289,10 @@ pub const BASS_3DALG_OFF: DWORD = 1;
 pub const BASS_3DALG_FULL: DWORD = 2;
 pub const BASS_3DALG_LIGHT: DWORD = 3;
 
+// BASS_SampleGetChannel flags
+pub const BASS_SAMCHAN_NEW: DWORD = 1;
+pub const BASS_SAMCHAN_STREAM: DWORD = 2;
+
 pub const BASS_STREAMPROC_END: DWORD = 0x80000000; // end of user stream flag
 
 // BASS_StreamCreateFileUser file systems

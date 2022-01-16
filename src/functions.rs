@@ -114,7 +114,7 @@ generate_bindings! {
     binding BASS_SAMPLE_GET_DATA fn BASS_SampleGetData(handle: HSAMPLE, buffer: *mut c_void) -> BOOL;
     binding BASS_SAMPLE_GET_INFO fn BASS_SampleGetInfo(handle: HSAMPLE, info: *mut BassSample) -> BOOL;
     binding BASS_SAMPLE_SET_INFO fn BASS_SampleSetInfo(handle: HSAMPLE, info: *const BassSample) -> BOOL;
-    binding BASS_SAMPLE_GET_CHANNEL fn BASS_SampleGetChannel(handle: HSAMPLE, only_new: BOOL) -> HCHANNEL;
+    binding BASS_SAMPLE_GET_CHANNEL fn BASS_SampleGetChannel(handle: HSAMPLE, flags: DWORD) -> HCHANNEL;
     binding BASS_SAMPLE_GET_CHANNELS fn BASS_SampleGetChannels(handle: HSAMPLE, channels: *mut HCHANNEL) -> DWORD;
     binding BASS_SAMPLE_STOP fn BASS_SampleStop(handle: HSAMPLE) -> BOOL;
     binding BASS_STREAM_CREATE fn BASS_StreamCreate(
