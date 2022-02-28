@@ -821,7 +821,7 @@ pub struct BassDx8Echo {
     pub feedback: f32,
     pub left_delay: f32,
     pub right_delay: f32,
-    pub pan_delay: f32,
+    pub pan_delay: BOOL,
 }
 
 impl BassDx8Echo {
@@ -830,7 +830,7 @@ impl BassDx8Echo {
         feedback: f32,
         left_delay: f32,
         right_delay: f32,
-        pan_delay: f32,
+        pan_delay: BOOL,
     ) -> Self {
         Self {
             wet_dry_mix,

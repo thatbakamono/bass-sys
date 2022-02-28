@@ -57,14 +57,15 @@ generate_bindings! {
     binding BASS_START fn BASS_Start() -> BOOL;
     binding BASS_STOP fn BASS_Stop() -> BOOL;
     binding BASS_PAUSE fn BASS_Pause() -> BOOL;
-    binding BASS_IS_STARTED fn BASS_IsStarted() -> BOOL;
+    binding BASS_IS_STARTED fn BASS_IsStarted() -> DWORD;
     binding BASS_SET_VOLUME fn BASS_SetVolume(value: f32) -> BOOL;
     binding BASS_GET_VOLUME fn BASS_GetVolume() -> f32;
     binding BASS_PLUGIN_LOAD fn BASS_PluginLoad(file: *const c_void, flags: DWORD) -> HPLUGIN;
     binding BASS_PLUGIN_FREE fn BASS_PluginFree(handle: HPLUGIN) -> BOOL;
+    binding BASS_PLUGIN_ENABLE fn BASS_PluginEnable(handle: HPLUGIN, enable: BOOL) -> BOOL;
     binding BASS_PLUGIN_GET_INFO fn BASS_PluginGetInfo(handle: HPLUGIN) -> *mut BassPluginInfo;
     binding BASS_SET_3D_FACTORS fn BASS_Set3DFactors(distance: f32, roll: f32, doppler_factor: f32) -> BOOL;
-    binding BASS_GET_3D_FACTORS fn BASS_Get3DFactors(distance: f32, roll: f32, doppler_factor: f32) -> BOOL;
+    binding BASS_GET_3D_FACTORS fn BASS_Get3DFactors(distance: *mut f32, roll: *mut f32, doppler_factor: *mut f32) -> BOOL;
     binding BASS_SET_3D_POSITION fn BASS_Set3DPosition(
         position: *const Bass3DVector,
         velocity: *const Bass3DVector,
@@ -78,13 +79,6 @@ generate_bindings! {
         top: *mut Bass3DVector
     ) -> BOOL;
     binding BASS_APPLY_3D fn BASS_Apply3D();
-    binding BASS_SET_EAX_PARAMETERS fn BASS_SetEAXParameters(environment: c_int, volume: f32, decay: f32, damp: f32) -> BOOL;
-    binding BASS_GET_EAX_PARAMETERS fn BASS_GetEAXParameters(
-        environment: *mut DWORD,
-        volume: *mut f32,
-        decay: *mut f32,
-        damp: *mut f32
-    ) -> BOOL;
     binding BASS_MUSIC_LOAD fn BASS_MusicLoad(
         memory: BOOL,
         file: *const c_void,
@@ -174,6 +168,7 @@ generate_bindings! {
     binding BASS_CHANNEL_FLAGS fn BASS_ChannelFlags(handle: DWORD, flags: DWORD, mask: DWORD) -> DWORD;
     binding BASS_CHANNEL_UPDATE fn BASS_ChannelUpdate(handle: DWORD, length: DWORD) -> BOOL;
     binding BASS_CHANNEL_LOCK fn BASS_ChannelLock(handle: DWORD, lock: BOOL) -> BOOL;
+    binding BASS_CHANNEL_FREE fn BASS_ChannelFree(handle: DWORD) -> BOOL;
     binding BASS_CHANNEL_PLAY fn BASS_ChannelPlay(handle: DWORD, restart: BOOL) -> BOOL;
     binding BASS_CHANNEL_STOP fn BASS_ChannelStop(handle: DWORD) -> BOOL;
     binding BASS_CHANNEL_PAUSE fn BASS_ChannelPause(handle: DWORD) -> BOOL;
@@ -192,7 +187,7 @@ generate_bindings! {
         attribute: DWORD,
         value: *mut c_void,
         size: DWORD
-    ) -> BOOL;
+    ) -> DWORD;
     binding BASS_CHANNEL_SET_3D_ATTRIBUTES fn BASS_ChannelSet3DAttributes(
         handle: DWORD,
         mode: c_int,
@@ -237,7 +232,7 @@ generate_bindings! {
         user: *mut c_void
     ) -> HSYNC;
     binding BASS_CHANNEL_REMOVE_SYNC fn BASS_ChannelRemoveSync(handle: DWORD, sync: HSYNC) -> BOOL;
-    binding BASS_CHANNEL_SET_DSP fn BASS_ChannelSetDSP(handle: DWORD, proc: *mut DSPPROC, user: *mut c_void, priority: c_int) ;
+    binding BASS_CHANNEL_SET_DSP fn BASS_ChannelSetDSP(handle: DWORD, proc: *mut DSPPROC, user: *mut c_void, priority: c_int) -> HDSP;
     binding BASS_CHANNEL_REMOVE_DSP fn BASS_ChannelRemoveDSP(handle: DWORD, dsp: HDSP) -> BOOL;
     binding BASS_CHANNEL_SET_LINK fn BASS_ChannelSetLink(handle: DWORD, channel: DWORD) -> BOOL;
     binding BASS_CHANNEL_REMOVE_LINK fn BASS_ChannelRemoveLink(handle: DWORD, channel: DWORD) -> BOOL;
