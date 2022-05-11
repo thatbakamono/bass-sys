@@ -64,13 +64,13 @@ static BASS_LIBRARY: Lazy<Library> = Lazy::new(|| {
 ///
 /// ```no_run
 /// #[cfg(target_os = "windows")]
-/// bass_sys::set_library_name("bass.dll");
+/// bass_sys::set_library_name(String::from("bass.dll"));
 ///
 /// #[cfg(target_os = "linux")]
-/// bass_sys::set_library_name("libbass.so");
+/// bass_sys::set_library_name(String::from("libbass.so"));
 ///
 /// #[cfg(target_os = "macos")]
-/// bass_sys::set_library_name("libbass.dylib");
+/// bass_sys::set_library_name(String::from("libbass.dylib"));
 /// ```
 pub fn set_library_name(name: String) -> Result<(), String> {
     BASS_LIBRARY_NAME.set(name)
