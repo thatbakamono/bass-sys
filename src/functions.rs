@@ -1,37 +1,91 @@
 use libloading::Library;
-use once_cell::sync::Lazy;
+use once_cell::sync::{Lazy, OnceCell};
 
 use crate::{generate_bindings, types::{
     Bass3DVector, BassChannelInfo, BassDeviceInfo, BassFileProcs, BassInfo, BassPluginInfo,
     BassRecordInfo, BassSample, BOOL, DOWNLOADPROC, DSPPROC, DWORD, HCHANNEL, HDSP, HFX, HMUSIC,
     HPLUGIN, HRECORD, HSAMPLE, HSTREAM, HSYNC, QWORD, RECORDPROC, STREAMPROC, SYNCPROC,
 }};
-use std::{env, os::raw::{c_char, c_int, c_void}};
+use std::{env, os::raw::{c_char, c_int, c_void}, path::PathBuf};
+
+static BASS_LIBRARY_NAME: OnceCell<String> = OnceCell::new();
+static BASS_LIBRARY_SEARCH_PATHS: OnceCell<Vec<PathBuf>> = OnceCell::new();
 
 static BASS_LIBRARY: Lazy<Library> = Lazy::new(|| {
-    // TODO: Privilege escalation (?)
-    // https://doc.rust-lang.org/std/env/fn.current_exe.html#security
-    if let Ok(mut library_path) = env::current_exe() {
-        library_path.pop();
-
+    let library_name = BASS_LIBRARY_NAME.get_or_init(|| {
         #[cfg(target_os = "windows")]
-        library_path.push("bass.dll");
+        return String::from("bass.dll");
 
         #[cfg(target_os = "linux")]
-        library_path.push("libbass.so");
+        return String::from("libbass.so");
 
         #[cfg(target_os = "macos")]
-        library_path.push("libbass.dylib");
+        return String::from("libbass.dylib");
+    });
 
-        if let Ok(library) = unsafe { Library::new(library_path) } {
-            return library;
+    let library_search_paths = BASS_LIBRARY_SEARCH_PATHS.get_or_init(|| {
+        if let Ok(mut current_directory) = env::current_exe() {
+            current_directory.pop();
+
+            return vec![current_directory];
         } else {
-            panic!("Failed to load the library.");
+            panic!("Failed to retrieve current working directory, can't initialize library search paths.");
         }
-    } else {
-        panic!("Failed to load the library.");
+    });
+
+    for library_search_path in library_search_paths {
+        let library_path = library_search_path.join(library_name);
+
+        if library_path.exists() && library_path.is_file() {
+            if let Ok(library) = unsafe { Library::new(library_path) } {
+                return library;
+            } else {
+                panic!("Failed to load the library.");
+            }
+        }
     }
+
+    panic!("Couldn't find the library.");
 });
+ 
+/// This function sets the library name. 
+/// If not called manually, the library name and search paths are automatically set to the default values by the time you call any Bass function. 
+/// If you wish to set them manually, do it before calling anything else.
+///
+/// Returns `Ok(())` if the library name wasn't already set, otherwise it returns `Err(name)`
+///
+/// The library name is used to find the dynamic library file of this name in paths set by `set_library_search_paths`. 
+/// It should include the file extension as well (for example: `bass.dll`).
+///
+/// Note that the dynamic-link library file name is usually dependant on the currently run operating system, 
+/// so in a multiplatform context one should use cfg to set the according library name.
+///
+/// For example:
+///
+/// ```no_run
+/// #[cfg(target_os = "windows")]
+/// bass_sys::set_library_name("bass.dll");
+///
+/// #[cfg(target_os = "linux")]
+/// bass_sys::set_library_name("libbass.so");
+///
+/// #[cfg(target_os = "macos")]
+/// bass_sys::set_library_name("libbass.dylib");
+/// ```
+pub fn set_library_name(name: String) -> Result<(), String> {
+    BASS_LIBRARY_NAME.set(name)
+}
+
+/// This function sets the library search paths.
+/// If not called manually, the library name and search paths are automatically set to the default values by the time you call any Bass function. 
+/// If you wish to set them manually, do it before calling anything else.
+///
+/// Returns `Ok(())` if the library search paths weren't already set, otherwise it returns `Err(search_paths)`
+///
+/// The library search paths are used to find the dynamic library file of the name set by `set_library_name`.
+pub fn set_library_search_paths(search_paths: Vec<PathBuf>) -> Result<(), Vec<PathBuf>> {
+    BASS_LIBRARY_SEARCH_PATHS.set(search_paths)
+}
 
 generate_bindings! {
     binding BASS_SET_CONFIG fn BASS_SetConfig(option: DWORD, value: DWORD) -> BOOL;
