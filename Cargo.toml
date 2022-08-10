@@ -13,4 +13,4 @@ categories = ["external-ffi-bindings", "multimedia::audio"]
 
 [dependencies]
 libloading = "0.7.3"
-once_cell = "1.8.0"
+once_cell = "1.13.0"
