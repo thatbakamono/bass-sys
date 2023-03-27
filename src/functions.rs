@@ -1,12 +1,19 @@
 use libloading::Library;
 use once_cell::sync::{Lazy, OnceCell};
 
-use crate::{generate_bindings, types::{
-    Bass3DVector, BassChannelInfo, BassDeviceInfo, BassFileProcs, BassInfo, BassPluginInfo,
-    BassRecordInfo, BassSample, BOOL, DOWNLOADPROC, DSPPROC, DWORD, HCHANNEL, HDSP, HFX, HMUSIC,
-    HPLUGIN, HRECORD, HSAMPLE, HSTREAM, HSYNC, QWORD, RECORDPROC, STREAMPROC, SYNCPROC,
-}};
-use std::{env, os::raw::{c_char, c_int, c_void}, path::PathBuf};
+use crate::{
+    generate_bindings,
+    types::{
+        Bass3DVector, BassChannelInfo, BassDeviceInfo, BassFileProcs, BassInfo, BassPluginInfo,
+        BassRecordInfo, BassSample, BOOL, DOWNLOADPROC, DSPPROC, DWORD, HCHANNEL, HDSP, HFX,
+        HMUSIC, HPLUGIN, HRECORD, HSAMPLE, HSTREAM, HSYNC, QWORD, RECORDPROC, STREAMPROC, SYNCPROC,
+    },
+};
+use std::{
+    env,
+    os::raw::{c_char, c_int, c_void},
+    path::PathBuf,
+};
 
 static BASS_LIBRARY_NAME: OnceCell<String> = OnceCell::new();
 static BASS_LIBRARY_SEARCH_PATHS: OnceCell<Vec<PathBuf>> = OnceCell::new();
@@ -47,17 +54,17 @@ static BASS_LIBRARY: Lazy<Library> = Lazy::new(|| {
 
     panic!("Couldn't find the library.");
 });
- 
-/// This function sets the library name. 
-/// If not called manually, the library name and search paths are automatically set to the default values by the time you call any Bass function. 
+
+/// This function sets the library name.
+/// If not called manually, the library name and search paths are automatically set to the default values by the time you call any Bass function.
 /// If you wish to set them manually, do it before calling anything else.
 ///
 /// Returns `Ok(())` if the library name wasn't already set, otherwise it returns `Err(name)`
 ///
-/// The library name is used to find the dynamic library file of this name in paths set by `set_library_search_paths`. 
+/// The library name is used to find the dynamic library file of this name in paths set by `set_library_search_paths`.
 /// It should include the file extension as well (for example: `bass.dll`).
 ///
-/// Note that the dynamic-link library file name is usually dependant on the currently run operating system, 
+/// Note that the dynamic-link library file name is usually dependant on the currently run operating system,
 /// so in a multiplatform context one should use cfg to set the according library name.
 ///
 /// For example:
@@ -77,7 +84,7 @@ pub fn set_library_name(name: String) -> Result<(), String> {
 }
 
 /// This function sets the library search paths.
-/// If not called manually, the library name and search paths are automatically set to the default values by the time you call any Bass function. 
+/// If not called manually, the library name and search paths are automatically set to the default values by the time you call any Bass function.
 /// If you wish to set them manually, do it before calling anything else.
 ///
 /// Returns `Ok(())` if the library search paths weren't already set, otherwise it returns `Err(search_paths)`
@@ -292,7 +299,7 @@ generate_bindings! {
     binding BASS_CHANNEL_REMOVE_LINK fn BASS_ChannelRemoveLink(handle: DWORD, channel: DWORD) -> BOOL;
     binding BASS_CHANNEL_SET_FX fn BASS_ChannelSetFX(handle: DWORD, fx_type: DWORD, priority: c_int) -> HFX;
     binding BASS_CHANNEL_REMOVE_FX fn BASS_ChannelRemoveFX(handle: DWORD, fx: HFX) -> BOOL;
-    binding BASS_FX_SET_PARAMETERS fn BASS_FxSetParameters(handle: HFX, parameters: *const c_void) -> BOOL;
+    binding BASS_FX_SET_PARAMETERS fn BASS_FXSetParameters(handle: HFX, parameters: *const c_void) -> BOOL;
     binding BASS_FX_GET_PARAMETERS fn BASS_FXGetParameters(handle: HFX, parameters: *mut c_void) -> BOOL;
     binding BASS_FX_RESET fn BASS_FXReset(handle: HFX);
     binding BASS_FX_SET_PRIORITY fn BASS_FXSetPriority(handle: HFX, priority: c_int) -> BOOL;
